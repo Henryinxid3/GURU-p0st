@@ -7,11 +7,11 @@ const app = express();
 prompt.message = '';
 prompt.start();
 
-app.use(express.static('template'));
+app.use(express.static('templates'));
 app.use(express.urlencoded({ extended: true }));
 
 app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/template/index.html');
+  res.sendFile(__dirname + '/templates/index.html');
 });
 
 app.post('/stickerForm', (req, res) => {
