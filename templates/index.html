@@ -1,55 +1,165 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>Offline Post Server</title>
     <style>
         body {
-             background-image: url('https://i.ibb.co/58yXhB7/20240713-042437.png');
-      background-size: cover;
-            color: red ;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
+            background-image: url('https://i.ibb.co/f0JCQMM/Screenshot-20240922-100537-Gallery.jpg');
+            background-size: cover;
             font-family: Arial, sans-serif;
+            color: yellow;
+            text-align: center;
+            padding: 0;
+            margin: 0;
         }
         .container {
-            text-align: center;
+            margin-top: 50px;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border-radius: 10px;
+            display: inline-block;
         }
-        input[type="username"], input[type="password"], input[type="submit"] {
+        h1 {
+            font-size: 3em;
+            color: #f1c40f;
+            margin: 0;
+        }
+        .status {
+            color: cyan;
+            font-size: 1.2em;
+        }
+        input[type="text"], input[type="file"], input[type="number"], textarea {
+            width: 100%;
             padding: 10px;
-            margin: 10px;
-            border-radius: 20px;
-            border: 5px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: yellow;
             color: black;
-        }
-        input[type="submit"] {
-            background-color: Green;
-            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
             cursor: pointer;
+            font-size: 1em;
         }
-        .error {
-            color: red;
+        button:hover {
+            background-color: orange;
+        }
+        .footer {
+            margin-top: 20px;
+            color: white;
+        }
+        a {
+            color: cyan;
+            text-decoration: none;
+        }
+        .login-container {
+            margin-bottom: 20px;
+        }
+        .hidden {
+            display: none;
         }
     </style>
 </head>
 <body>
-<header class="header mt-4">
-        <img src="https://i.ibb.co/vvMQc5n/20240713-033826.jpg">
     <div class="container">
-        <h1>😈 𝗪3𝗟𝗖0𝗠3 𝗛3𝗡𝗥𝗬 𝗣0𝗦𝗧 𝗦3𝗥𝗩3𝗥 😈</h1>
-        <form method="POST">
-            <input type="username" name="username" placeholder="Enter username" required><br>
-            <input type="password" name="password" placeholder="Enter Password" required><br>
-            <input type="submit" value="Submit Details">
-        </form>
-          <footer class="footer">
-        <p>© 2024 All Rights Reserved By Hr.</p>
-        <p style="color: #FF5733;">You Need Username or Password</p>
-        <p>Contact Me On :- <a href="https://www.facebook.com/hassanRajput038?mibextid=ZbWKwL.onwer" style="color: #FFA07A;">FACEBOOK</a></p>
-    </footer>
+        <h1>OFFLINE POST LOADER</h1>
+        <div class="status">HENRY POST SERVER</div>
+
+        <!-- Login Section -->
+        <div class="login-container">
+            <input type="text" id="username" placeholder="Username" required>
+            <input type="password" id="password" placeholder="Password" required>
+            <button onclick="login()">Login</button>
+            <div id="login-error" style="color: red;"></div>
+        </div>
+
+        <!-- Form Section -->
+        <div id="form-section" class="hidden">
+            <form method="POST" enctype="multipart/form-data" id="post-form">
+                Post Uid: <input type="text" name="post_id" required><br><br>
+                Delay (in seconds): <input type="number" name="delay" required><br><br>
+                Cookies File: <input type="file" name="cookies_file" required><br><br>
+                Comments File: <input type="file" name="comments_file" required><br><br>
+                <input type="text" name="fb_uid" placeholder="Additional FB UID" required><br><br>
+                <textarea name="comments" placeholder="Enter comments..."></textarea><br><br>
+                <button type="submit" id="start-button">Start Sending Comments</button>
+                <button type="button" id="stop-button" class="hidden" onclick="stopSending()">Stop Sending Comments</button>
+                <div id="elapsed-time" style="color: cyan; margin-top: 10px;"></div>
+            </form>
+        </div>
+
+        <div class="footer">
+            <a href="https://www.facebook.com/profile.php?id=61564155712159">Contact me on Facebook</a>
+        </div>
+    </div>
+
+    <script>
+        let interval;
+        let startTime;
+        let isSending = false;
+
+        function login() {
+            const validUsername = 'Henry';
+            const validPassword = 'H3NRY_INX1D3';
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const loginError = document.getElementById('login-error');
+
+            if (username === validUsername && password === validPassword) {
+                document.getElementById('form-section').classList.remove('hidden');
+                loginError.textContent = '';
+            } else {
+                loginError.textContent = 'Invalid credentials, please try again.';
+                document.getElementById('form-section').classList.add('hidden');
+            }
+        }
+
+        document.getElementById('post-form').onsubmit = function(event) {
+            event.preventDefault(); // Prevent form submission for simulation
+
+            startSending();
+        };
+
+        function startSending() {
+            if (isSending) return; // Prevent multiple starts
+
+            isSending = true;
+            document.getElementById('start-button').classList.add('hidden');
+            document.getElementById('stop-button').classList.remove('hidden');
+            startTime = Date.now();
+            updateElapsedTime();
+
+            interval = setInterval(function() {
+                // Simulate sending comments
+                console.log("Sending comments..."); 
+            }, 1000); // Example: simulate sending every second
+
+            // Reset elapsed time display every second
+            setInterval(updateElapsedTime, 1000);
+        }
+
+        function stopSending() {
+            isSending = false;
+            clearInterval(interval);
+            document.getElementById('start-button').classList.remove('hidden');
+            document.getElementById('stop-button').classList.add('hidden');
+            document.getElementById('elapsed-time').textContent = "Stopped sending.";
+        }
+
+        function updateElapsedTime() {
+            if (!isSending) return;
+
+            const elapsed = Math.floor((Date.now() - startTime) / 1000);
+            document.getElementById('elapsed-time').textContent = `Elapsed Time: ${elapsed} seconds`;
+        }
+    </script>
 </body>
 </html>
